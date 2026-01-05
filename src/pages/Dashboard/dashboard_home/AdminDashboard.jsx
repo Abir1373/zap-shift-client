@@ -1,6 +1,7 @@
 import React from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import { GrUserAdmin } from "react-icons/gr";
 import {
   PieChart,
   Pie,
@@ -73,7 +74,12 @@ const AdminDashboard = () => {
   return (
     <div className="p-6 space-y-8">
       {/* Stats Cards */}
-      <h2 className="text-3xl font-bold">Parcel Delivery Overview</h2>
+      <div className="flex flex-row gap-4 text-primary " data-aos="fade-right">
+        <h2 className="text-3xl font-bold">
+          <GrUserAdmin />
+        </h2>
+        <h2 className="text-3xl font-bold">Parcel Delivery Overview</h2>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((item) => {
           const Icon = iconMap[item.status] || FaTruckMoving;
@@ -95,7 +101,7 @@ const AdminDashboard = () => {
       <h2 className="text-3xl font-bold mt-10">
         Parcel Delivery Status Distribution
       </h2>
-      <div className="w-full h-96 bg-white rounded-xl shadow-md p-6">
+      <div className="w-full h-full bg-slate-800 rounded-xl shadow-md p-6">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie

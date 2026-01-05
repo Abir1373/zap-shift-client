@@ -24,6 +24,7 @@ import PendingDeliveries from "../pages/Dashboard/pending_deliveries/PendingDeli
 import CompletedDeliveries from "../pages/Dashboard/completed_deliveries/CompletedDeliveries";
 import MyEarnings from "../pages/Dashboard/my_earnings/MyEarnings";
 import DashboardHome from "../pages/Dashboard/dashboard_home/DashboardHome";
+import About from "../pages/about/About";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: "forbidden",
         Component: Forbidden,
+      },
+      {
+        path: "about",
+        Component: About,
       },
       {
         path: "sendparcel",

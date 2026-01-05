@@ -9,49 +9,73 @@ const ActiveRiders = () => {
   const axiosSecure = useAxiosSecure();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { isPending, data: riders = [] } = useQuery({
-    queryKey: ["active-riders"],
+  // Fetch all active + deactive riders
+  const {
+    isLoading,
+    data: riders = [],
+    refetch,
+  } = useQuery({
+    queryKey: ["riders"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/riders/active");
+      const res = await axiosSecure.get("/riders/active-deactive");
       return res.data;
     },
   });
 
-  // 🔍 Filter riders for table
+  // Filter riders by search term
   const displayedRiders = searchTerm
     ? riders.filter((rider) =>
         rider.name?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : riders;
 
-  if (isPending) {
-    return <span className="loading loading-spinner text-primary"></span>;
+  // Handle Activate / Deactivate
+  const handleActivationStatus = async (rider, newStatus) => {
+    try {
+      await axiosSecure.patch(`/riders/${rider._id}/status`, {
+        status: newStatus, // "active" or "deactive"
+        work_status: newStatus === "active" ? "available" : "blocked",
+        email: rider.email,
+      });
+      // Refresh list after update
+      await refetch();
+    } catch (error) {
+      console.error("Failed to update rider status:", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <span className="loading loading-spinner text-primary text-2xl">
+        Loading riders...
+      </span>
+    );
   }
 
   return (
     <div className="overflow-x-auto m-5">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6" data-aos="fade-right">
+      <div className="flex items-center gap-3 mb-6">
         <VscCompassActive size={32} className="text-primary" />
-        <h2 className="text-3xl font-bold">Active Riders</h2>
+        <h2 className="text-3xl font-bold">Riders</h2>
       </div>
 
       {/* Search */}
-      <div className="flex flex-col">
-        <label className="text-2xl font-bold my-5">Search</label>
+      <div className="flex flex-col mb-5">
+        <label className="text-2xl font-bold mb-2">Search Riders</label>
         <input
           type="text"
-          placeholder="Search riders by name..."
+          placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border px-3 py-2 rounded w-2/5 m-5"
+          className="border px-3 py-2 rounded w-2/5"
         />
       </div>
 
       {/* Table */}
-      <table className="table table-xs text-xl">
+      <table className="table table-xs text-lg border">
         <thead>
-          <tr className="text-xl">
+          <tr className="text-lg font-semibold">
             <th>Name</th>
             <th>Email</th>
             <th>Region</th>
@@ -62,31 +86,37 @@ const ActiveRiders = () => {
           </tr>
         </thead>
 
-        <tbody className="text-xl">
+        <tbody>
           {displayedRiders.length > 0 ? (
-            displayedRiders.map((rider, index) => (
-              <tr key={rider._id || index}>
-                <td className="text-lg">{rider.name}</td>
-                <td className="text-lg">{rider.email}</td>
-                <td className="text-lg">{rider.region}</td>
-                <td className="text-lg">{rider.district}</td>
-                <td className="text-lg">{rider.phone}</td>
-                <td className="text-lg">{rider.status}</td>
-                <td>
-                  <div className="text-center">
-                    <button className="btn btn-outline mx-2 btn-success">
-                      <GiCheckMark /> Active
-                    </button>
-                    <button className="btn btn-outline btn-error mx-2">
-                      <RiDeleteBack2Fill /> Deactive
-                    </button>
-                  </div>
+            displayedRiders.map((rider) => (
+              <tr key={rider._id}>
+                <td>{rider.name}</td>
+                <td>{rider.email}</td>
+                <td>{rider.region}</td>
+                <td>{rider.district}</td>
+                <td>{rider.phone}</td>
+                <td>{rider.status}</td>
+                <td className="text-center">
+                  <button
+                    className="btn btn-outline btn-success mx-2"
+                    onClick={() => handleActivationStatus(rider, "active")}
+                    disabled={rider.status === "active"}
+                  >
+                    <GiCheckMark /> Active
+                  </button>
+                  <button
+                    className="btn btn-outline btn-error mx-2"
+                    onClick={() => handleActivationStatus(rider, "deactive")}
+                    disabled={rider.status === "deactive"}
+                  >
+                    <RiDeleteBack2Fill /> Deactive
+                  </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center text-gray-500 py-4">
+              <td colSpan={7} className="text-center text-gray-500 py-4">
                 No riders found
               </td>
             </tr>

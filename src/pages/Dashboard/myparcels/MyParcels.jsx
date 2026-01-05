@@ -21,7 +21,65 @@ const MyParcels = () => {
     },
   });
 
-  const handleView = (parcel) => console.log("View Details:", parcel);
+  const handleView = (parcel) => {
+    Swal.fire({
+      title: `<strong style="color:#4A90E2;">📦 Parcel Details</strong>`,
+      html: `
+      <table style="width:100%; text-align:left; border-collapse: collapse;">
+        <tr><td style="color:#FF6B6B;"><strong>Parcel Name:</strong></td><td>${
+          parcel.parcel_name
+        }</td></tr>
+        <tr><td style="color:#FF6B6B;"><strong>Document Type:</strong></td><td>${
+          parcel.document_type
+        }</td></tr>
+        <tr><td style="color:#FF6B6B;"><strong>Weight:</strong></td><td>${
+          parcel.weight
+        } kg</td></tr>
+        <tr><td style="color:#4ECDC4;"><strong>Sender:</strong></td><td>${
+          parcel.sender_name
+        }</td></tr>
+        <tr><td style="color:#4ECDC4;"><strong>Sender Contact:</strong></td><td>${
+          parcel.sender_contact
+        }</td></tr>
+        <tr><td style="color:#556270;"><strong>Receiver:</strong></td><td>${
+          parcel.receiver_name
+        }</td></tr>
+        <tr><td style="color:#556270;"><strong>Receiver Contact:</strong></td><td>${
+          parcel.receiver_contact
+        }</td></tr>
+        <tr><td style="color:#C7F464;"><strong>Receiver Address:</strong></td><td>${
+          parcel.receiver_address
+        }</td></tr>
+        <tr><td style="color:#FF6B6B;"><strong>Delivery Status:</strong></td><td>${
+          parcel.delivery_status
+        }</td></tr>
+        <tr><td style="color:#FF6B6B;"><strong>Payment Status:</strong></td><td>${
+          parcel.payment_status
+        }</td></tr>
+        <tr><td style="color:#4A90E2;"><strong>Tracking ID:</strong></td><td>${
+          parcel.tracking_id
+        }</td></tr>
+        <tr><td style="color:#4A90E2;"><strong>Cost:</strong></td><td>$${
+          parcel.cost
+        }</td></tr>
+        <tr><td style="color:#FF6B6B;"><strong>Created By:</strong></td><td>${
+          parcel.created_by
+        }</td></tr>
+        <tr><td style="color:#FF6B6B;"><strong>Creation Date:</strong></td><td>${new Date(
+          parcel.creation_date
+        ).toLocaleString()}</td></tr>
+        <tr><td style="color:#4ECDC4;"><strong>Assigned Rider:</strong></td><td>${
+          parcel.assigned_rider_name
+        }</td></tr>
+      </table>
+    `,
+      icon: "info",
+      showCloseButton: true,
+      focusConfirm: false,
+      confirmButtonText: "Close",
+      background: "linear-gradient(to right, #FFDEE9, #B5FFFC)", // colorful gradient background
+    });
+  };
 
   const handlePay = (parcel) => {
     console.log("Pay:", parcel._id);

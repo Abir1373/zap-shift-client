@@ -1,7 +1,6 @@
 import { Outlet } from "react-router";
 import Navbar from "../pages/shared/navbar/Navbar";
 import Footer from "../pages/shared/footer/Footer";
-
 const RootLayout = () => {
   return (
     <div>
@@ -11,5 +10,4 @@ const RootLayout = () => {
     </div>
   );
 };
-
 export default RootLayout;
